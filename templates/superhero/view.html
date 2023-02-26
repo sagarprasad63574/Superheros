@@ -1,0 +1,57 @@
+{% extends 'base.html' %}
+{% block content %}
+{% if data %}
+<div class="row justify-content-center">
+    <div class="col-md-6">
+        <ul class="list-group no-hover" id="messages">
+            <li class="list-group-item">
+                <div class="message-area">
+                    <h1>Name: {{ data.name }}</h1>
+                    <img src="{{ data.image.url }}" alt="image of superhero" width="400px" height="400px">
+
+                    <h4>Biography: </h4>
+                    <p>
+                        Full-name: {{ data.biography['full-name'] }} <br> 
+                        Alter-egos: {{ data.biography['alter-egos'] }} <br>
+                        Place-of-birth: {{ data.biography['place-of-birth'] }} <br>
+                        First-appearance: {{ data.biography['first-appearance'] }} <br>
+                        Publisher: {{ data.biography.publisher }}
+                    </p>
+                    <h4>Powerstats: </h4>
+                    <p>
+                        Intelligence: {{ data.powerstats.intelligence }} <br> 
+                        Strength: {{ data.powerstats.strength }} <br>
+                        Speed: {{ data.powerstats.speed }} <br>
+                        Durability: {{ data.powerstats.durability }} <br>
+                        Power: {{ data.powerstats.power }} <br>
+                        Combat: {{ data.powerstats.combat }}
+                    </p>
+                    <h4>Appearance: </h4>
+                    <p>
+                        Gender: {{ data.appearance.gender }} <br> 
+                        Race: {{ data.appearance.race }} <br>
+                        Height: {{ data.appearance.height[0] }} <br>
+                        Weight: {{ data.appearance.weight[0] }} <br>
+                        Eye-color: {{ data.appearance['eye-color'] }} <br>
+                        Hair-color: {{ data.appearance['hair-color'] }}
+                    </p>
+                    <h4>Work: </h4>
+                    <p>
+                        Occupation: {{ data.work.occupation }} <br> 
+                        Base: {{ data.work.base }}
+                    </p>
+                    <h4>Connections: </h4>
+                    <p>
+                        Group-affiliation: {{ data.connections['group-affiliation'] }} <br> 
+                        Relatives: {{ data.connections.relatives }}
+                    </p>
+                </div>
+                <form method="POST" action="/api/superhero/{{ data.id }}/add">
+                    <button class="btn btn-outline-success">Add</button>
+                </form>
+            </li>
+        </ul>
+    </div>
+</div>
+{% endif %}
+{% endblock %}

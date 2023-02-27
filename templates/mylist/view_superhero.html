@@ -1,0 +1,99 @@
+{% extends 'base.html' %}
+{% block content %}
+<div class="row justify-content-center">
+    <div class="col-md-6">
+        <ul class="list-group no-hover" id="messages">
+            <li class="list-group-item">
+                <div class="message-area">
+                    <h1>Name: {{ superheroinfo.name }}</h1>
+
+                    {% if superheroinfo.image_url == "" %}
+                    <p>Well add an edit button to edit an image_url</p>
+                    {% else %}
+                    <img src="{{ superheroinfo.image_url }}" alt="image of superhero" width="400px" height="400px">
+                    {% endif %}
+
+                    {% if biography %}
+                    <h4>Biography: </h4>
+                    <p>
+                        Full-name: {{ biography.full_name }} <br> 
+                        Alter-egos: {{ biography.alter_egos }} <br>
+                        Place-of-birth: {{ biography.place_of_birth }} <br>
+                        First-appearance: {{ biography.first_appearance }} <br>
+                        Publisher: {{ biography.publisher }}
+                    </p>
+                    {% else %}
+                    No Biography added, 
+                    <form method="GET" action="/mylist/add/biography/{{ superheroinfo.id }}">
+                        <button class="btn btn-sm btn-outline-success">Add Biography</button>
+                    </form>
+                    {% endif %}
+
+                    {% if powerstats %}
+                    <h4>Powerstats: </h4>
+                    <p>
+                        Intelligence: {{ powerstats.intelligence }} <br> 
+                        Strength: {{ powerstats.strength }} <br>
+                        Speed: {{ powerstats.speed }} <br>
+                        Durability: {{ powerstats.durability }} <br>
+                        Power: {{ powerstats.power }} <br>
+                        Combat: {{ powerstats.combat }}
+                    </p>
+                    <form method="GET" action="/mylist/edit/powerstats/{{ superheroinfo.id }}">
+                        <button class="btn btn-sm btn-outline-primary">Edit Powerstats</button>
+                    </form>
+                    {% else %}
+                    No powerstats added, 
+                    <form method="GET" action="/mylist/add/powerstats/{{ superheroinfo.id }}">
+                        <button class="btn btn-sm btn-outline-success">Add Powerstats</button>
+                    </form>
+                    {% endif %}
+
+                    {% if appearance %}
+                    <h4>Appearance: </h4>
+                    <p>
+                        Gender: {{ appearance.gender }} <br> 
+                        Race: {{ appearance.race }} <br>
+                        Height: {{ appearance.height }} <br>
+                        Weight: {{ appearance.weight }} <br>
+                        Eye-color: {{ appearance.eye_color }} <br>
+                        Hair-color: {{ appearance.hair_color }}
+                    </p>
+                    {% else %}
+                    No appearance added, 
+                    <form method="GET" action="/mylist/add/appearance/{{ superheroinfo.id }}">
+                        <button class="btn btn-sm btn-outline-success">Add Appearance</button>
+                    </form>
+                    {% endif %}
+
+                    {% if work %}
+                    <h4>Work: </h4>
+                    <p>
+                        Occupation: {{ work.occupation }} <br> 
+                        Base: {{ work.base_of_operation }}
+                    </p>
+                    {% else %}
+                    No work added, 
+                    <form method="GET" action="/mylist/add/work/{{ superheroinfo.id }}">
+                        <button class="btn btn-sm btn-outline-success">Add Work</button>
+                    </form>
+                    {% endif %}
+
+                    {% if connections %}
+                    <h4>Connections: </h4>
+                    <p>
+                        Group-affiliation: {{ connections.group_affiliation }} <br> 
+                        Relatives: {{ connections.relatives }}
+                    </p>
+                    {% else %}
+                    No connections added, 
+                    <form method="GET" action="/mylist/add/connections/{{ superheroinfo.id }}">
+                        <button class="btn btn-sm btn-outline-success">Add Connections</button>
+                    </form>
+                    {% endif %}
+                </div>
+            </li>
+        </ul>
+    </div>
+</div>
+{% endblock %}

@@ -1,0 +1,55 @@
+{% extends 'base.html' %}
+{% block content %}
+<div class="row justify-content-center">
+    <div class="col-md-6">
+        <ul class="list-group no-hover" id="messages">
+            <li class="list-group-item">
+                <div class="message-area">
+                    <h1>Name: {{ superheroinfo.name }}</h1>
+                    <img src="{{ superheroinfo.image_url }}" alt="image of superhero" width="400px" height="400px">
+
+                    <h4>Biography: </h4>
+                    <p>
+                        Full-name: {{ biography.full_name }} <br> 
+                        Alter-egos: {{ biography.alter_egos }} <br>
+                        Place-of-birth: {{ biography.place_of_birth }} <br>
+                        First-appearance: {{ biography.first_appearance }} <br>
+                        Publisher: {{ biography.publisher }}
+                    </p>
+                    <h4>Powerstats: </h4>
+                    <p>
+                        Intelligence: {{ powerstats.intelligence }} <br> 
+                        Strength: {{ powerstats.strength }} <br>
+                        Speed: {{ powerstats.speed }} <br>
+                        Durability: {{ powerstats.durability }} <br>
+                        Power: {{ powerstats.power }} <br>
+                        Combat: {{ powerstats.combat }}
+                    </p>
+                    <h4>Appearance: </h4>
+                    <p>
+                        Gender: {{ appearance.gender }} <br> 
+                        Race: {{ appearance.race }} <br>
+                        Height: {{ appearance.height }} <br>
+                        Weight: {{ appearance.weight }} <br>
+                        Eye-color: {{ appearance.eye_color }} <br>
+                        Hair-color: {{ appearance.hair_color }}
+                    </p>
+                    <h4>Work: </h4>
+                    <p>
+                        Occupation: {{ work.occupation }} <br> 
+                        Base: {{ work.base_of_operation }}
+                    </p>
+                    <h4>Connections: </h4>
+                    <p>
+                        Group-affiliation: {{ connections.group_affiliation }} <br> 
+                        Relatives: {{ connections.relatives }}
+                    </p>
+                </div>
+                <form method="POST" action="/favorites/delete/{{ superheroinfo.id }}">
+                    <button class="btn btn-outline-success">Delete</button>
+                </form>
+            </li>
+        </ul>
+    </div>
+</div>
+{% endblock %}

@@ -22,3 +22,20 @@ class SearchForm(FlaskForm):
     """Search for superhero form."""
     
     name = StringField('Name of superhero', validators=[InputRequired(), Length(min=2)])
+
+class SuperheroForm(FlaskForm):
+    """Add superhero form"""
+
+    name = StringField('Enter name of superhero', validators=[InputRequired(), Length(min=2)])
+
+    image_url = StringField('(Optional) Image URL')
+
+class PowerstatsForm(FlaskForm):
+    """Add powerstats form"""
+
+    intelligence = StringField('Intelligence', validators=[InputRequired(), Length(min=1)])
+    strength = StringField('Strength', validators=[InputRequired(), Length(min=1)])
+    speed = StringField('Speed', validators=[InputRequired(), Length(min=1)])
+    durability = StringField('Durability', validators=[InputRequired(), Length(min=1)])
+    power = StringField('Power', validators=[InputRequired(), Length(min=1)])
+    combat = StringField('Combat', validators=[InputRequired(), Length(min=1)])

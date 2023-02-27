@@ -1,0 +1,29 @@
+{% extends 'base.html' %}
+{% block content %}
+<h2>User: {{g.user.username}} favorites list!</h2>
+<form method="GET" action="/favorites/create">
+    <button class="btn btn-outline-primary">Create New Superhero</button>
+</form>
+{% if superhero_list %}
+<div class="row justify-content-center">
+    <div class="col-md-6">
+        <ul class="list-group no-hover" id="messages">
+            {% for superhero in superhero_list %}
+            <li class="list-group-item">
+                <div class="message-area">
+                    <h1>Name: {{ superhero.name }}</h1>
+                    <img src="{{ superhero.image_url }}" alt="image of superhero" width="400px" height="400px">
+                </div>
+                <form method="POST" action="/favorites/delete/{{ superhero.id }}">
+                    <button class="btn btn-outline-success">Delete</button>
+                </form>
+                <form method="GET" action="/favorites/view/{{ superhero.id }}">
+                    <button class="btn btn-outline-primary">View</button>
+                </form>
+            </li>
+            {% endfor %}
+        </ul>
+    </div>
+</div>
+{% endif %}
+{% endblock %}

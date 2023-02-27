@@ -190,7 +190,7 @@ nav+.container {
 
 .message-area,
 .timeline-image {
-    display: inline-block;
+    display: block;
 }
 
 .message-area {

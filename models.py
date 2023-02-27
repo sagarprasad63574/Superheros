@@ -45,6 +45,11 @@ class User(db.Model):
         secondary="superheros"
     )
 
+    mysuperheros = db.relationship(
+        'SuperheroInfo',
+        secondary="mysuperheros"
+    )
+
     def __repr__(self):
             return f"<User #{self.id}: {self.first_name}, {self.last_name}, {self.username}>"
 
@@ -137,7 +142,6 @@ class SuperheroInfo(db.Model):
 
     superhero_id = db.Column(
         db.Text,
-        nullable=False,
         unique=True,
     )
 

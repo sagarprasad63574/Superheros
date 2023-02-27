@@ -4,7 +4,7 @@ from flask import Flask, redirect, render_template, request, flash, session, g
 from flask_debugtoolbar import DebugToolbarExtension
 from sqlalchemy.exc import IntegrityError, InvalidRequestError
 from models import db, connect_db, User, Superheros, SuperheroInfo, Powerstats, Biography, Appearance, Work, Connections
-from forms import SignUpForm, LoginForm, SearchForm
+from forms import SignUpForm, LoginForm, SearchForm, SuperheroForm, PowerstatsForm
 
 CURR_USER_KEY = "curr_user"
 API_KEY = "https://www.superheroapi.com/api.php/1406925980051610/"
@@ -262,11 +262,118 @@ def view_favorites_list():
         flash("Access unauthorized.", "danger")
         return redirect("/")
 
-    favorites = db.session.query(Superheros).filter_by(user_id=g.user.id).all()
- 
-    return render_template('favorites/view.html', favorites=favorites)
+    users_superheros_ids = db.session.query(Superheros).filter_by(user_id=g.user.id).all() 
 
-    
+    superhero_list = []
+    for superhero in users_superheros_ids:
+        superhero_list.append(db.session.query(SuperheroInfo).filter_by(id=superhero.superheroinfo_id).one())
+
+    return render_template('favorites/view.html', superhero_list=superhero_list)
+
+
+@app.route("/favorites/view/<int:superheroinfo_id>", methods=["GET"])
+def view_superheroinfo_by_id(superheroinfo_id):
+    if not g.user:
+        flash("Access unauthorized.", "danger")
+        return redirect("/")
+
+    superheroinfo = db.session.query(SuperheroInfo).filter_by(id=superheroinfo_id).one()
+    powerstats = db.session.query(Powerstats).filter_by(superheroinfo_id=superheroinfo_id).one()
+    biography = db.session.query(Biography).filter_by(superheroinfo_id=superheroinfo_id).one()
+    appearance = db.session.query(Appearance).filter_by(superheroinfo_id=superheroinfo_id).one()
+    work = db.session.query(Work).filter_by(superheroinfo_id=superheroinfo_id).one()
+    connections = db.session.query(Connections).filter_by(superheroinfo_id=superheroinfo_id).one()
+
+    return render_template('favorites/view_superhero.html', 
+    superheroinfo=superheroinfo, 
+    powerstats=powerstats, 
+    biography=biography, 
+    appearance=appearance, 
+    work=work, 
+    connections=connections)
+
+@app.route("/favorites/delete/<int:superheroinfo_id>", methods=["POST"])
+def delete_superhero_from_list(superheroinfo_id):
+    if not g.user:
+        flash("Access unauthorized.", "danger")
+        return redirect("/")
+
+    get_superhero = check_favorites_list(superheroinfo_id)
+    db.session.delete(get_superhero)
+    db.session.commit()
+
+    flash("Deleted superhero from list", "success")
+    return redirect('favorites/view')
+
+@app.route("/favorites/create", methods=["GET", "POST"])
+def create_new_superhero():
+    if not g.user:
+        flash("Access unauthorized.", "danger")
+        return redirect("/")
+
+    form = SuperheroForm()
+
+    if form.validate_on_submit():
+
+        superheroinfo = SuperheroInfo(name=form.name.data, image_url=form.image_url.data)
+
+        g.user.mysuperheros.append(superheroinfo)
+        db.session.commit()
+
+        return redirect(f'/mylist/view/{superheroinfo.id}')
+
+    return render_template('/favorites/create.html', form=form)
+
+
+@app.route("/mylist/view/<int:superheroinfo_id>", methods=["GET"])
+def mylist_view_superheroinfo_by_id(superheroinfo_id):
+    if not g.user:
+        flash("Access unauthorized.", "danger")
+        return redirect("/")
+
+    superheroinfo = db.session.query(SuperheroInfo).filter_by(id=superheroinfo_id).one()
+    powerstats = db.session.query(Powerstats).filter_by(superheroinfo_id=superheroinfo_id).one_or_none()
+    biography = db.session.query(Biography).filter_by(superheroinfo_id=superheroinfo_id).one_or_none()
+    appearance = db.session.query(Appearance).filter_by(superheroinfo_id=superheroinfo_id).one_or_none()
+    work = db.session.query(Work).filter_by(superheroinfo_id=superheroinfo_id).one_or_none()
+    connections = db.session.query(Connections).filter_by(superheroinfo_id=superheroinfo_id).one_or_none()
+
+    return render_template('mylist/view_superhero.html', 
+    superheroinfo=superheroinfo, 
+    powerstats=powerstats, 
+    biography=biography, 
+    appearance=appearance, 
+    work=work, 
+    connections=connections)
+
+@app.route("/mylist/add/powerstats/<int:superheroinfo_id>", methods=["GET", "POST"])
+def add_powerstats_to_superhero(superheroinfo_id):
+    if not g.user:
+        flash("Access unauthorized.", "danger")
+        return redirect("/")
+
+    form = PowerstatsForm()
+
+    if form.validate_on_submit():
+
+        superheroinfo = SuperheroInfo.query.get_or_404(superheroinfo_id)
+
+        powerstat = Powerstats(
+            intelligence=form.intelligence.data,
+            strength=form.strength.data,
+            speed=form.speed.data,
+            durability=form.durability.data,
+            power=form.power.data,
+            combat=form.combat.data
+        )
+
+        superheroinfo.powerstats.append(powerstat)
+        db.session.commit()
+
+        return redirect(f'/mylist/view/{superheroinfo.id}')
+
+    return render_template('/mylist/create_powerstats.html', form=form)
+
 
 @app.route("/")
 def root():

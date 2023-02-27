@@ -1,0 +1,12 @@
+{% extends 'base.html' %}
+{% block content %}
+<h2 class="mt-4">Add name and image for superhero</h2>
+
+<form method="GET" action="/favorites/add/{{superheroinfo}}/powerstats">
+
+    <button class="btn btn-outline-primary">Add powerstats</button>
+</form>
+
+{{ superheroinfo.name }}
+
+{% endblock %}

@@ -1,6 +1,10 @@
 {% extends 'base.html' %}
 {% block content %}
 <div class="row justify-content-center">
+    <h2>User: {{g.user.username}}</h2>
+    <form method="GET" action="/mylist/view">
+        <button class="btn btn-outline-success">View List</button>
+    </form>
     <div class="col-md-6">
         <ul class="list-group no-hover" id="messages">
             <li class="list-group-item">
@@ -8,9 +12,15 @@
                     <h1>Name: {{ superheroinfo.name }}</h1>
 
                     {% if superheroinfo.image_url == "" %}
-                    <p>Well add an edit button to edit an image_url</p>
+                    <p>Image: None</p>
+                    <form method="GET" action="/mylist/edit/image_url/{{ superheroinfo.id }}">
+                        <button class="btn btn-sm btn-outline-primary">Edit Image</button>
+                    </form>
                     {% else %}
                     <img src="{{ superheroinfo.image_url }}" alt="image of superhero" width="400px" height="400px">
+                    <form method="GET" action="/mylist/edit/image_url/{{ superheroinfo.id }}">
+                        <button class="btn btn-sm btn-outline-primary">Edit Image</button>
+                    </form>
                     {% endif %}
 
                     {% if biography %}
@@ -22,6 +32,9 @@
                         First-appearance: {{ biography.first_appearance }} <br>
                         Publisher: {{ biography.publisher }}
                     </p>
+                    <form method="GET" action="/mylist/edit/biography/{{ superheroinfo.id }}">
+                        <button class="btn btn-sm btn-outline-primary">Edit Biography</button>
+                    </form>
                     {% else %}
                     No Biography added, 
                     <form method="GET" action="/mylist/add/biography/{{ superheroinfo.id }}">
@@ -59,6 +72,9 @@
                         Eye-color: {{ appearance.eye_color }} <br>
                         Hair-color: {{ appearance.hair_color }}
                     </p>
+                    <form method="GET" action="/mylist/edit/appearance/{{ superheroinfo.id }}">
+                        <button class="btn btn-sm btn-outline-primary">Edit Appearance</button>
+                    </form>
                     {% else %}
                     No appearance added, 
                     <form method="GET" action="/mylist/add/appearance/{{ superheroinfo.id }}">
@@ -72,6 +88,9 @@
                         Occupation: {{ work.occupation }} <br> 
                         Base: {{ work.base_of_operation }}
                     </p>
+                    <form method="GET" action="/mylist/edit/work/{{ superheroinfo.id }}">
+                        <button class="btn btn-sm btn-outline-primary">Edit Work</button>
+                    </form>
                     {% else %}
                     No work added, 
                     <form method="GET" action="/mylist/add/work/{{ superheroinfo.id }}">
@@ -85,6 +104,9 @@
                         Group-affiliation: {{ connections.group_affiliation }} <br> 
                         Relatives: {{ connections.relatives }}
                     </p>
+                    <form method="GET" action="/mylist/edit/connections/{{ superheroinfo.id }}">
+                        <button class="btn btn-sm btn-outline-primary">Edit Connections</button>
+                    </form>
                     {% else %}
                     No connections added, 
                     <form method="GET" action="/mylist/add/connections/{{ superheroinfo.id }}">

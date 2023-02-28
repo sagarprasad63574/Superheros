@@ -32,12 +32,14 @@
       <li><a href="/login">Log in</a></li>
       {% else %}
       <li>
-        <a href="/users/{{ g.user.id }}">
+        <a href="/user/{{ g.user.id }}">
           <img src="{{ g.user.image_url }}" alt="{{ g.user.username }}">
         </a>
       </li>
-      <li><a class="btn btn-info" href="/api/search">search</a></li>
-      <li><a href="/logout">Log out</a></li>
+      <li><a class="btn btn-outline-success" href="/mylist/view">My Superheros</a></li>
+      <li><a class="btn btn-outline-success" href="/favorites/view">Favorites</a></li>
+      <li><a class="btn btn-outline-secondary" href="/api/search">Search</a></li>
+      <li><a class="btn btn-outline-dark"href="/logout">Log out</a></li>
       {% endif %}
     </ul>
   </div>

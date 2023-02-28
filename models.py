@@ -150,6 +150,7 @@ class SuperheroInfo(db.Model):
         nullable=False,
     )
 
+    #add the default image_url
     image_url = db.Column(
         db.Text,
         default="",

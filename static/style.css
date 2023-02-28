@@ -24,7 +24,7 @@ body.error-404 {
 /* ======================= Nav used */
 
 .navbar {
-    background-color: #fff;
+    background-color: lightgray;
     height: 46px;
     border-bottom: 1px solid rgba(0, 0, 0, 0.25);
     margin-bottom: 1rem;
@@ -33,13 +33,13 @@ body.error-404 {
 }
 
 .navbar a {
-    color: #66757f;
+    color: black;
     font-size: 13px;
     font-weight: bold;
 }
 
 .navbar a:hover {
-    color: #1c94e0;
+    color: #ffffff;
 }
 
 .navbar-brand {
@@ -83,6 +83,7 @@ nav form.navbar-form {
     box-sizing: border-box;
 }
 
+/*
 #search.form-control+.btn {
     position: absolute;
     right: 9px;

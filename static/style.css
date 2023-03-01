@@ -21,6 +21,10 @@ body.error-404 {
     cursor: pointer;
 }
 
+.title {
+    text-align: center;
+    margin: 20px;
+}
 /* ======================= Nav used */
 
 .navbar {

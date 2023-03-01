@@ -2,9 +2,10 @@ import os
 import requests, json
 from flask import Flask, redirect, render_template, request, flash, session, g
 from flask_debugtoolbar import DebugToolbarExtension
+from sqlalchemy import desc
 from sqlalchemy.exc import IntegrityError, InvalidRequestError
 from models import db, connect_db, User, MySuperheros, Superheros, SuperheroInfo, Powerstats, Biography, Appearance, Work, Connections
-from forms import SignUpForm, LoginForm, UserEditForm, SearchForm, ImageForm, SuperheroForm, PowerstatsForm, BiographyForm, AppearanceForm, WorkForm, ConnectionsForm
+from forms import SignUpForm, LoginForm, UserEditForm, SearchForm, SearchOrderForm, ImageForm, SuperheroForm, PowerstatsForm, BiographyForm, AppearanceForm, WorkForm, ConnectionsForm
 
 CURR_USER_KEY = "curr_user"
 API_KEY = "https://www.superheroapi.com/api.php/1406925980051610/"
@@ -25,7 +26,7 @@ db.create_all()
 @app.route("/")
 def root():
     if g.user: 
-        return redirect('/search')
+        return redirect('/api/search')
     else: 
         return render_template("home.html")
 
@@ -158,28 +159,62 @@ def search_superhero_from_otherUsers():
             name = form.name.data
             
             other_users_list = db.session.query(MySuperheros).filter(MySuperheros.user_id != g.user.id).all()
-            
-            
-            print("*****************************************")
-            print(other_users_list)
-            print("*****************************************")
-            result = []
+
+            results = []
             for superhero in other_users_list:
                 hero = db.session.query(SuperheroInfo).filter_by(id=superhero.superheroinfo_id).filter(SuperheroInfo.name.like(f"%{name}%")).one_or_none()
                 if hero:
-                    result.append(hero)
+                    results.append(hero)
 
-            print("*****************************************")
-            print(result)
-            print("*****************************************")
-
-            return render_template('users/search.html', form=form)
+            return render_template('/users/search.html', form=form, results=results)
 
         except IntegrityError:
             flash("No superhero found with that name", 'danger')
-            return render_template('users/search.html', form=form)
+            return render_template('/users/search.html', form=form)
 
-    return render_template('users/search.html', form=form)
+    return render_template('/users/search.html', form=form)
+
+@app.route("/users/view/superhero/<int:superheroinfo_id>", methods=["GET"])
+def view_other_users_superhero(superheroinfo_id):
+    if not g.user:
+        flash("Access unauthorized.", "danger")
+        return redirect("/")
+
+    superheroinfo = db.session.query(SuperheroInfo).filter_by(id=superheroinfo_id).one_or_none()
+    powerstats = db.session.query(Powerstats).filter_by(superheroinfo_id=superheroinfo_id).one_or_none()
+    biography = db.session.query(Biography).filter_by(superheroinfo_id=superheroinfo_id).one_or_none()
+    appearance = db.session.query(Appearance).filter_by(superheroinfo_id=superheroinfo_id).one_or_none()
+    work = db.session.query(Work).filter_by(superheroinfo_id=superheroinfo_id).one_or_none()
+    connections = db.session.query(Connections).filter_by(superheroinfo_id=superheroinfo_id).one_or_none()
+
+    return render_template('/users/view_superhero.html', 
+    superheroinfo=superheroinfo, 
+    powerstats=powerstats, 
+    biography=biography, 
+    appearance=appearance, 
+    work=work, 
+    connections=connections)
+
+@app.route("/users/add/superhero/<int:superheroinfo_id>", methods=["POST"])
+def add_superhero_to_favorties(superheroinfo_id):
+    if not g.user:
+        flash("Access unauthorized.", "danger")
+        return redirect("/")
+    
+    superheroinfo = db.session.query(SuperheroInfo).filter_by(id=superheroinfo_id).one_or_none()
+
+    if superheroinfo:
+        in_favorites = db.session.query(Superheros).filter_by(user_id=g.user.id).filter_by(superheroinfo_id=superheroinfo_id).one_or_none()
+
+        if in_favorites:
+            flash("Superhero already in favorties", 'danger')
+            return redirect('/search')
+        else: 
+            g.user.superheros.append(superheroinfo)
+            db.session.commit()
+                
+            flash(f"Superhero ({superheroinfo.name}) added!", 'success')
+            return redirect('/search')
 
 @app.route("/api/search", methods=["GET", "POST"])
 def search_superhero():
@@ -335,42 +370,30 @@ def add_connections(connections):
                 relatives=connections['relatives'])
     return connection
 
-
-# @app.route("/favorites/view", methods=["GET"])
-# def view_favorites_list():
-#     if not g.user:
-#         flash("Access unauthorized.", "danger")
-#         return redirect("/")
-
-#     form = SearchForm()
-
-#     users_superheros_ids = db.session.query(Superheros).filter_by(user_id=g.user.id).all() 
-
-#     superhero_list = []
-#     for superhero in users_superheros_ids:
-#         superhero_list.append(db.session.query(SuperheroInfo).filter_by(id=superhero.superheroinfo_id).one())
-
-#     return render_template('/favorites/view_all.html', form=form, superhero_list=superhero_list)
-
 @app.route("/favorites/view", methods=["GET", "POST"])
 def view_favorites_list_by_search():
     if not g.user:
         flash("Access unauthorized.", "danger")
         return redirect("/")
 
-    form = SearchForm()
+    form = SearchOrderForm()
 
     users_superheros_ids = db.session.query(Superheros).filter_by(user_id=g.user.id).all() 
 
     if form.validate_on_submit():
 
         name = form.name.data 
+        order = form.order.data
 
         superhero_list = []
         for superhero in users_superheros_ids:
+
             superhero = db.session.query(SuperheroInfo).filter_by(id=superhero.superheroinfo_id).filter(SuperheroInfo.name.like(f"%{name}%")).one_or_none()
+                
             if superhero:
                 superhero_list.append(superhero)
+
+        superhero_list.sort(key=lambda x: x.name, reverse=True) if order == "desc" else superhero_list.sort(key=lambda x: x.name)
 
         return render_template('/favorites/view_all.html', form=form, superhero_list=superhero_list)
 
@@ -387,12 +410,12 @@ def view_superheroinfo_by_id(superheroinfo_id):
         flash("Access unauthorized.", "danger")
         return redirect("/")
 
-    superheroinfo = db.session.query(SuperheroInfo).filter_by(id=superheroinfo_id).one()
-    powerstats = db.session.query(Powerstats).filter_by(superheroinfo_id=superheroinfo_id).one()
-    biography = db.session.query(Biography).filter_by(superheroinfo_id=superheroinfo_id).one()
-    appearance = db.session.query(Appearance).filter_by(superheroinfo_id=superheroinfo_id).one()
-    work = db.session.query(Work).filter_by(superheroinfo_id=superheroinfo_id).one()
-    connections = db.session.query(Connections).filter_by(superheroinfo_id=superheroinfo_id).one()
+    superheroinfo = db.session.query(SuperheroInfo).filter_by(id=superheroinfo_id).one_or_none()
+    powerstats = db.session.query(Powerstats).filter_by(superheroinfo_id=superheroinfo_id).one_or_none()
+    biography = db.session.query(Biography).filter_by(superheroinfo_id=superheroinfo_id).one_or_none()
+    appearance = db.session.query(Appearance).filter_by(superheroinfo_id=superheroinfo_id).one_or_none()
+    work = db.session.query(Work).filter_by(superheroinfo_id=superheroinfo_id).one_or_none()
+    connections = db.session.query(Connections).filter_by(superheroinfo_id=superheroinfo_id).one_or_none()
 
     return render_template('/favorites/view_superhero.html', 
     superheroinfo=superheroinfo, 
@@ -440,18 +463,22 @@ def mylist_view_all():
         flash("Access unauthorized.", "danger")
         return redirect("/")
 
-    form = SearchForm()
+    form = SearchOrderForm()
     users_mysuperheros_ids = db.session.query(MySuperheros).filter_by(user_id=g.user.id).all() 
 
     if form.validate_on_submit():
 
         name = form.name.data 
+        order = form.order.data
 
         superhero_list = []
         for superhero in users_mysuperheros_ids:
             superhero = db.session.query(SuperheroInfo).filter_by(id=superhero.superheroinfo_id).filter(SuperheroInfo.name.like(f"%{name}%")).one_or_none()
             if superhero:
                 superhero_list.append(superhero)
+
+
+        superhero_list.sort(key=lambda x: x.name, reverse=True) if order == "desc" else superhero_list.sort(key=lambda x: x.name)
 
         return render_template('/mylist/view_all.html', form=form, superhero_list=superhero_list)
 

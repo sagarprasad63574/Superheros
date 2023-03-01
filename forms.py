@@ -1,5 +1,5 @@
 from flask_wtf import FlaskForm
-from wtforms import StringField, PasswordField, TextAreaField
+from wtforms import StringField, PasswordField, TextAreaField, SelectField
 from wtforms.validators import InputRequired, Length, Optional
 
 class SignUpForm(FlaskForm):
@@ -30,6 +30,12 @@ class SearchForm(FlaskForm):
     """Search for superhero form."""
     
     name = StringField('Name of superhero', validators=[InputRequired(), Length(min=2)])
+
+class SearchOrderForm(FlaskForm):
+    """Search for superhero form."""
+    
+    name = StringField('Name of superhero', validators=[InputRequired(), Length(min=2)])
+    order = SelectField('Order By', choices=[('asec','Name asec'), ('desc', 'Name desc')])
 
 class ImageForm(FlaskForm):
     """Add image for superhero form."""

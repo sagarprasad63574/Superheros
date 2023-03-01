@@ -1,5 +1,6 @@
 {% extends 'base.html' %}
 {% block content %}
+<h1 class="title">Look Up Superheros Created By Other Users!</h1>
 <div class="row justify-content-center">
     <div class="col-md-6">
         <form method="POST">
@@ -18,28 +19,24 @@
         </form>
     </div>
 </div>
-{% if data %}
+{% if results %}
 <div class="row justify-content-center">
     <div class="col-md-6">
         <ul class="list-group no-hover" id="messages">
-            <!-- {% for result in data.results %}
+            {% for result in results %}
             <li class="list-group-item">
                 <div class="message-area">
                     <h1>Name: {{ result.name }}</h1>
-                    <p>Full name: {{ result.biography['full-name'] }}</p>
-                    <p>Place of birth: {{ result.biography['place-of-birth'] }}</p>
-                    <p>First appearance: {{ result.biography['first-appearance'] }}</p>
-                    <p>Publisher: {{ result.biography.publisher }}</p>
-                    <img src="{{ result.image.url }}" alt="image of superhero" width="400px" height="400px">
+                    <img src="{{ result.image_url }}" alt="image of superhero" width="400px" height="400px">
                 </div>
-                <form method="POST" action="/api/superhero/{{ result.id }}/add">
+                <form method="POST" action="/users/add/superhero/{{ result.id }}">
                     <button class="btn btn-outline-success">Add</button>
                 </form>
-                <form method="GET" action="/api/superhero/{{ result.id }}/view">
+                <form method="GET" action="/users/view/superhero/{{ result.id }}">
                     <button class="btn btn-outline-primary">View</button>
                 </form>
             </li>
-            {% endfor %} -->
+            {% endfor %}
         </ul>
     </div>
 </div>

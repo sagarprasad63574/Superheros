@@ -1,6 +1,7 @@
 {% extends 'base.html' %}
 {% block content %}
-<h2>User: {{g.user.username}}, superhero list!</h2>
+<h1 class="title">My Superheros!</h1>
+<h4>Username: {{g.user.username}}</h4>
 <form method="GET" action="/mylist/create">
     <button class="btn btn-outline-primary">Create New Superhero</button>
 </form>
@@ -17,6 +18,7 @@
                 {% endfor %}
                 {% endif %}
                 {{ form.name(placeholder="Enter a name of a superhero", class="form-control") }}
+                {{ form.order(class="form-control") }}
                 <button class="btn btn-outline-success">Search!</button>
             </div>
         </form>

@@ -1,0 +1,47 @@
+{% extends 'base.html' %}
+{% block content %}
+<div class="row justify-content-center">
+    <div class="col-md-6">
+        <form method="POST">
+            {{ form.csrf_token }}
+            <div>
+                {% if form.name.errors %}
+                {% for error in form.name.errors %}
+                <span class="text-danger">
+                    {{ error }}
+                </span>
+                {% endfor %}
+                {% endif %}
+                {{ form.name(placeholder="Enter a name of a superhero", class="form-control") }}
+            </div>
+            <button class="btn btn-outline-success">Search!</button>
+        </form>
+    </div>
+</div>
+{% if data %}
+<div class="row justify-content-center">
+    <div class="col-md-6">
+        <ul class="list-group no-hover" id="messages">
+            <!-- {% for result in data.results %}
+            <li class="list-group-item">
+                <div class="message-area">
+                    <h1>Name: {{ result.name }}</h1>
+                    <p>Full name: {{ result.biography['full-name'] }}</p>
+                    <p>Place of birth: {{ result.biography['place-of-birth'] }}</p>
+                    <p>First appearance: {{ result.biography['first-appearance'] }}</p>
+                    <p>Publisher: {{ result.biography.publisher }}</p>
+                    <img src="{{ result.image.url }}" alt="image of superhero" width="400px" height="400px">
+                </div>
+                <form method="POST" action="/api/superhero/{{ result.id }}/add">
+                    <button class="btn btn-outline-success">Add</button>
+                </form>
+                <form method="GET" action="/api/superhero/{{ result.id }}/view">
+                    <button class="btn btn-outline-primary">View</button>
+                </form>
+            </li>
+            {% endfor %} -->
+        </ul>
+    </div>
+</div>
+{% endif %}
+{% endblock %}

@@ -106,7 +106,6 @@ class Superheros(db.Model):
     superheroinfo_id = db.Column(
         db.Integer,
         db.ForeignKey('superheroinfos.id', ondelete='cascade'),
-        unique=True,
     )
 
     superheroinfo = db.relationship('SuperheroInfo')
@@ -130,6 +129,8 @@ class MySuperheros(db.Model):
         db.ForeignKey('superheroinfos.id', ondelete='cascade'),
         unique=True,
     )
+
+    superheroinfo = db.relationship('SuperheroInfo')
 
 class SuperheroInfo(db.Model):
 

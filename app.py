@@ -25,7 +25,7 @@ db.create_all()
 @app.route("/")
 def root():
     if g.user: 
-        return redirect('/api/search')
+        return redirect('/search')
     else: 
         return render_template("home.html")
 
@@ -145,6 +145,41 @@ def users_edit(user_id):
     
     return render_template('/users/edit.html', form=form)
 
+@app.route("/search", methods=["GET", "POST"])
+def search_superhero_from_otherUsers():
+    if not g.user:
+        flash("Access unauthorized.", "danger")
+        return redirect("/")
+
+    form = SearchForm()
+
+    if form.validate_on_submit():
+        try:
+            name = form.name.data
+            
+            other_users_list = db.session.query(MySuperheros).filter(MySuperheros.user_id != g.user.id).all()
+            
+            
+            print("*****************************************")
+            print(other_users_list)
+            print("*****************************************")
+            result = []
+            for superhero in other_users_list:
+                hero = db.session.query(SuperheroInfo).filter_by(id=superhero.superheroinfo_id).filter(SuperheroInfo.name.like(f"%{name}%")).one_or_none()
+                if hero:
+                    result.append(hero)
+
+            print("*****************************************")
+            print(result)
+            print("*****************************************")
+
+            return render_template('users/search.html', form=form)
+
+        except IntegrityError:
+            flash("No superhero found with that name", 'danger')
+            return render_template('users/search.html', form=form)
+
+    return render_template('users/search.html', form=form)
 
 @app.route("/api/search", methods=["GET", "POST"])
 def search_superhero():
@@ -207,12 +242,12 @@ def add_superhero(superhero_id):
             if is_superhero_in_favorites:
                 flash("Superhero already in the list", 'danger')
                 return redirect('/api/search')
-            
-            g.user.superheros.append(is_superhero_in_superheroinfo)
-            db.session.commit()
-
-            flash(f"Superhero ({data['name']}) added!", 'success')
-            return redirect('/api/search')
+            else: 
+                g.user.superheros.append(is_superhero_in_superheroinfo)
+                db.session.commit()
+                
+                flash(f"Superhero ({data['name']}) added!", 'success')
+                return redirect('/api/search')
 
         superheroinfo = add_superheroinfo(data)
 
@@ -238,7 +273,7 @@ def add_superhero(superhero_id):
         flash(f"Superhero ({data['name']}) added!", 'success')
         return redirect('/api/search')
 
-    except IntegrityError:
+    except InvalidRequestError:
         flash("Superhero already in the list", 'danger')
         return redirect('/api/search')
 

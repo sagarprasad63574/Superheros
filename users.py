@@ -108,10 +108,10 @@ def add_superhero_to_favorties(superheroinfo_id):
 
         if in_favorites:
             flash("Superhero already in favorties", 'danger')
-            return redirect('/search')
+            return redirect('/users/search')
         else: 
             g.user.superheros.append(superheroinfo)
             db.session.commit()
                 
             flash(f"Superhero ({superheroinfo.name}) added!", 'success')
-            return redirect('/search')
+            return redirect('/users/search')

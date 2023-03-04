@@ -48,20 +48,26 @@ def view_superheroinfo_by_id(superheroinfo_id):
         flash("Access unauthorized.", "danger")
         return redirect("/")
 
-    superheroinfo = db.session.query(SuperheroInfo).filter_by(id=superheroinfo_id).one_or_none()
-    powerstats = db.session.query(Powerstats).filter_by(superheroinfo_id=superheroinfo_id).one_or_none()
-    biography = db.session.query(Biography).filter_by(superheroinfo_id=superheroinfo_id).one_or_none()
-    appearance = db.session.query(Appearance).filter_by(superheroinfo_id=superheroinfo_id).one_or_none()
-    work = db.session.query(Work).filter_by(superheroinfo_id=superheroinfo_id).one_or_none()
-    connections = db.session.query(Connections).filter_by(superheroinfo_id=superheroinfo_id).one_or_none()
+    get_superhero = check_favorites_list(superheroinfo_id)
 
-    return render_template('/favorites/view_superhero.html', 
-    superheroinfo=superheroinfo, 
-    powerstats=powerstats, 
-    biography=biography, 
-    appearance=appearance, 
-    work=work, 
-    connections=connections)
+    if get_superhero: 
+        superheroinfo = db.session.query(SuperheroInfo).filter_by(id=superheroinfo_id).one_or_none()
+        powerstats = db.session.query(Powerstats).filter_by(superheroinfo_id=superheroinfo_id).one_or_none()
+        biography = db.session.query(Biography).filter_by(superheroinfo_id=superheroinfo_id).one_or_none()
+        appearance = db.session.query(Appearance).filter_by(superheroinfo_id=superheroinfo_id).one_or_none()
+        work = db.session.query(Work).filter_by(superheroinfo_id=superheroinfo_id).one_or_none()
+        connections = db.session.query(Connections).filter_by(superheroinfo_id=superheroinfo_id).one_or_none()
+
+        return render_template('/favorites/view_superhero.html', 
+        superheroinfo=superheroinfo, 
+        powerstats=powerstats, 
+        biography=biography, 
+        appearance=appearance, 
+        work=work, 
+        connections=connections)
+    else: 
+        flash("No superhero found in list!", "danger")
+        return redirect('/favorites/view')
 
 @favorites.route("/favorites/delete/<int:superheroinfo_id>", methods=["POST"])
 def delete_superhero_from_list(superheroinfo_id):
@@ -70,11 +76,15 @@ def delete_superhero_from_list(superheroinfo_id):
         return redirect("/")
 
     get_superhero = check_favorites_list(superheroinfo_id)
-    db.session.delete(get_superhero)
-    db.session.commit()
+    if get_superhero:
+        db.session.delete(get_superhero)
+        db.session.commit()
 
-    flash("Deleted superhero from list", "success")
-    return redirect('favorites/view')
+        flash("Deleted superhero from list", "success")
+        return redirect('favorites/view')
+    else:
+        flash("No superhero found in list!", "danger")
+        return redirect('/favorites/view')
 
 def check_favorites_list(id):
     in_favorites = db.session.query(Superheros).filter_by(user_id=g.user.id).filter_by(superheroinfo_id=id).one_or_none()

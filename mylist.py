@@ -9,6 +9,11 @@ from forms import SignUpForm, LoginForm, UserEditForm, SearchForm, SearchOrderFo
 
 mylist = Blueprint("mylist", __name__, static_folder="static", template_folder="templates")
 
+def check_mylist(id):
+    in_list = db.session.query(MySuperheros).filter_by(user_id=g.user.id).filter_by(superheroinfo_id=id).one_or_none()
+
+    return in_list
+
 @mylist.route("/mylist/create", methods=["GET", "POST"])
 def create_new_superhero():
     if not g.user:
@@ -65,20 +70,27 @@ def mylist_view_superheroinfo_by_id(superheroinfo_id):
         flash("Access unauthorized.", "danger")
         return redirect("/")
 
-    superheroinfo = db.session.query(SuperheroInfo).filter_by(id=superheroinfo_id).one()
-    powerstats = db.session.query(Powerstats).filter_by(superheroinfo_id=superheroinfo_id).one_or_none()
-    biography = db.session.query(Biography).filter_by(superheroinfo_id=superheroinfo_id).one_or_none()
-    appearance = db.session.query(Appearance).filter_by(superheroinfo_id=superheroinfo_id).one_or_none()
-    work = db.session.query(Work).filter_by(superheroinfo_id=superheroinfo_id).one_or_none()
-    connections = db.session.query(Connections).filter_by(superheroinfo_id=superheroinfo_id).one_or_none()
+    get_superhero = check_mylist(superheroinfo_id)
 
-    return render_template('mylist/view_superhero.html', 
-    superheroinfo=superheroinfo, 
-    powerstats=powerstats, 
-    biography=biography, 
-    appearance=appearance, 
-    work=work, 
-    connections=connections)
+    if get_superhero: 
+        superheroinfo = db.session.query(SuperheroInfo).filter_by(id=superheroinfo_id).one()
+        powerstats = db.session.query(Powerstats).filter_by(superheroinfo_id=superheroinfo_id).one_or_none()
+        biography = db.session.query(Biography).filter_by(superheroinfo_id=superheroinfo_id).one_or_none()
+        appearance = db.session.query(Appearance).filter_by(superheroinfo_id=superheroinfo_id).one_or_none()
+        work = db.session.query(Work).filter_by(superheroinfo_id=superheroinfo_id).one_or_none()
+        connections = db.session.query(Connections).filter_by(superheroinfo_id=superheroinfo_id).one_or_none()
+
+        return render_template('mylist/view_superhero.html', 
+        superheroinfo=superheroinfo, 
+        powerstats=powerstats, 
+        biography=biography, 
+        appearance=appearance, 
+        work=work, 
+        connections=connections)
+
+    else:
+        flash("No superhero found in list!", "danger")
+        return redirect('/mylist/view')
 
 @mylist.route("/mylist/edit/image_url/<int:superheroinfo_id>", methods=["GET", "POST"])
 def edit_image_of_superhero(superheroinfo_id):
@@ -87,16 +99,21 @@ def edit_image_of_superhero(superheroinfo_id):
         return redirect("/")
 
     form = ImageForm()
+    get_superhero = check_mylist(superheroinfo_id)
 
-    if form.validate_on_submit():
+    if get_superhero:
 
-        superheroinfo = SuperheroInfo.query.get_or_404(superheroinfo_id)
+        if form.validate_on_submit():
 
-        superheroinfo.image_url = form.image_url.data
+            superheroinfo = SuperheroInfo.query.get_or_404(superheroinfo_id)
+            superheroinfo.image_url = form.image_url.data
 
-        db.session.commit()
-
-        return redirect(f'/mylist/view/{superheroinfo.id}')
+            db.session.commit()
+            
+            return redirect(f'/mylist/view/{superheroinfo.id}')
+    else:
+        flash("No superhero found in list!", "danger")
+        return redirect('/mylist/view')
 
     return render_template('/mylist/add_image.html', form=form)
 
@@ -107,24 +124,30 @@ def add_powerstats_to_superhero(superheroinfo_id):
         return redirect("/")
 
     form = PowerstatsForm()
+    get_superhero = check_mylist(superheroinfo_id)
 
-    if form.validate_on_submit():
+    if get_superhero:
 
-        superheroinfo = SuperheroInfo.query.get_or_404(superheroinfo_id)
+        if form.validate_on_submit():
 
-        powerstat = Powerstats(
-            intelligence=form.intelligence.data,
-            strength=form.strength.data,
-            speed=form.speed.data,
-            durability=form.durability.data,
-            power=form.power.data,
-            combat=form.combat.data
-        )
+            superheroinfo = SuperheroInfo.query.get_or_404(superheroinfo_id)
 
-        superheroinfo.powerstats.append(powerstat)
-        db.session.commit()
+            powerstat = Powerstats(
+                intelligence=form.intelligence.data,
+                strength=form.strength.data,
+                speed=form.speed.data,
+                durability=form.durability.data,
+                power=form.power.data,
+                combat=form.combat.data
+            )
 
-        return redirect(f'/mylist/view/{superheroinfo.id}')
+            superheroinfo.powerstats.append(powerstat)
+            db.session.commit()
+
+            return redirect(f'/mylist/view/{superheroinfo.id}')
+    else:
+        flash("No superhero found in list!", "danger")
+        return redirect('/mylist/view')
 
     return render_template('/mylist/add_powerstats.html', form=form)
 
@@ -135,25 +158,29 @@ def edit_powerstats_to_superhero(superheroinfo_id):
         return redirect("/")
 
     form = PowerstatsForm()
-    superheroinfo = SuperheroInfo.query.get_or_404(superheroinfo_id)
-    powerstat = db.session.query(Powerstats).filter_by(superheroinfo_id=superheroinfo.id).one_or_none()
 
-    if form.validate_on_submit():
+    get_superhero = check_mylist(superheroinfo_id)
 
-        superheroinfo = SuperheroInfo.query.get_or_404(superheroinfo_id)
+    if get_superhero:
 
-        powerstat = db.session.query(Powerstats).filter_by(superheroinfo_id=superheroinfo.id).one_or_none()
+        if form.validate_on_submit():
 
-        powerstat.intelligence = form.intelligence.data
-        powerstat.strength = form.strength.data
-        powerstat.speed = form.speed.data
-        powerstat.durability = form.durability.data
-        powerstat.power = form.power.data
-        powerstat.combat = form.combat.data
+            superheroinfo = SuperheroInfo.query.get_or_404(superheroinfo_id)
+            powerstat = db.session.query(Powerstats).filter_by(superheroinfo_id=superheroinfo.id).one_or_none()
 
-        db.session.commit()
+            powerstat.intelligence = form.intelligence.data
+            powerstat.strength = form.strength.data
+            powerstat.speed = form.speed.data
+            powerstat.durability = form.durability.data
+            powerstat.power = form.power.data
+            powerstat.combat = form.combat.data
 
-        return redirect(f'/mylist/view/{superheroinfo.id}')
+            db.session.commit()
+
+            return redirect(f'/mylist/view/{superheroinfo.id}')
+    else:
+        flash("No superhero found in list!", "danger")
+        return redirect('/mylist/view')
 
     return render_template('/mylist/add_powerstats.html', form=form)
 
@@ -166,22 +193,29 @@ def add_biography_to_superhero(superheroinfo_id):
 
     form = BiographyForm()
 
-    if form.validate_on_submit():
+    get_superhero = check_mylist(superheroinfo_id)
 
-        superheroinfo = SuperheroInfo.query.get_or_404(superheroinfo_id)
+    if get_superhero:
 
-        biography = Biography(
-            full_name=form.full_name.data,
-            place_of_birth=form.place_of_birth.data,
-            first_appearance=form.first_appearance.data,
-            alter_egos=form.alter_egos.data,
-            publisher=form.publisher.data
-        )
+        if form.validate_on_submit():
 
-        superheroinfo.biography.append(biography)
-        db.session.commit()
+            superheroinfo = SuperheroInfo.query.get_or_404(superheroinfo_id)
 
-        return redirect(f'/mylist/view/{superheroinfo.id}')
+            biography = Biography(
+                full_name=form.full_name.data,
+                place_of_birth=form.place_of_birth.data,
+                first_appearance=form.first_appearance.data,
+                alter_egos=form.alter_egos.data,
+                publisher=form.publisher.data
+            )
+
+            superheroinfo.biography.append(biography)
+            db.session.commit()
+
+            return redirect(f'/mylist/view/{superheroinfo.id}')
+    else:
+        flash("No superhero found in list!", "danger")
+        return redirect('/mylist/view')
 
     return render_template('/mylist/add_biography.html', form=form)
 
@@ -192,24 +226,28 @@ def edit_biography_to_superhero(superheroinfo_id):
         return redirect("/")
 
     form = BiographyForm()
-    superheroinfo = SuperheroInfo.query.get_or_404(superheroinfo_id)
-    biography = db.session.query(Biography).filter_by(superheroinfo_id=superheroinfo.id).one_or_none()
 
-    if form.validate_on_submit():
+    get_superhero = check_mylist(superheroinfo_id)
 
-        superheroinfo = SuperheroInfo.query.get_or_404(superheroinfo_id)
+    if get_superhero:
 
-        biography = db.session.query(Biography).filter_by(superheroinfo_id=superheroinfo.id).one_or_none()
+        if form.validate_on_submit():
 
-        biography.full_name = biography.full_name if form.full_name.data == "" else form.full_name.data
-        biography.place_of_birth = biography.place_of_birth if form.place_of_birth.data == "" else form.place_of_birth.data
-        biography.first_appearance = biography.first_appearance if form.first_appearance.data == "" else form.first_appearance.data
-        biography.alter_egos = biography.alter_egos if form.alter_egos.data == "" else form.alter_egos.data
-        biography.publisher = biography.publisher if form.publisher.data == "" else form.publisher.data
-        
-        db.session.commit()
+            superheroinfo = SuperheroInfo.query.get_or_404(superheroinfo_id)
+            biography = db.session.query(Biography).filter_by(superheroinfo_id=superheroinfo.id).one_or_none()
 
-        return redirect(f'/mylist/view/{superheroinfo.id}')
+            biography.full_name = biography.full_name if form.full_name.data == "" else form.full_name.data
+            biography.place_of_birth = biography.place_of_birth if form.place_of_birth.data == "" else form.place_of_birth.data
+            biography.first_appearance = biography.first_appearance if form.first_appearance.data == "" else form.first_appearance.data
+            biography.alter_egos = biography.alter_egos if form.alter_egos.data == "" else form.alter_egos.data
+            biography.publisher = biography.publisher if form.publisher.data == "" else form.publisher.data
+            
+            db.session.commit()
+
+            return redirect(f'/mylist/view/{superheroinfo.id}')
+    else:
+        flash("No superhero found in list!", "danger")
+        return redirect('/mylist/view')
 
     return render_template('/mylist/add_biography.html', form=form)
     
@@ -221,23 +259,30 @@ def add_appearance_to_superhero(superheroinfo_id):
 
     form = AppearanceForm()
 
-    if form.validate_on_submit():
+    get_superhero = check_mylist(superheroinfo_id)
 
-        superheroinfo = SuperheroInfo.query.get_or_404(superheroinfo_id)
+    if get_superhero:
 
-        appearance = Appearance(
-            gender=form.gender.data,
-            race=form.race.data,
-            height=form.height.data,
-            weight=form.weight.data,
-            eye_color=form.eye_color.data,
-            hair_color=form.hair_color.data
-        )
+        if form.validate_on_submit():
 
-        superheroinfo.appearance.append(appearance)
-        db.session.commit()
+            superheroinfo = SuperheroInfo.query.get_or_404(superheroinfo_id)
 
-        return redirect(f'/mylist/view/{superheroinfo.id}')
+            appearance = Appearance(
+                gender=form.gender.data,
+                race=form.race.data,
+                height=form.height.data,
+                weight=form.weight.data,
+                eye_color=form.eye_color.data,
+                hair_color=form.hair_color.data
+            )
+
+            superheroinfo.appearance.append(appearance)
+            db.session.commit()
+
+            return redirect(f'/mylist/view/{superheroinfo.id}')
+    else:
+        flash("No superhero found in list!", "danger")
+        return redirect('/mylist/view')
 
     return render_template('/mylist/add_appearance.html', form=form)
 
@@ -249,22 +294,28 @@ def edit_appearance_to_superhero(superheroinfo_id):
 
     form = AppearanceForm()
 
-    if form.validate_on_submit():
+    get_superhero = check_mylist(superheroinfo_id)
 
-        superheroinfo = SuperheroInfo.query.get_or_404(superheroinfo_id)
+    if get_superhero:
 
-        appearance = db.session.query(Appearance).filter_by(superheroinfo_id=superheroinfo.id).one_or_none()
+        if form.validate_on_submit():
 
-        appearance.gender = appearance.gender if form.gender.data == "" else form.gender.data
-        appearance.race = appearance.race if form.race.data == "" else form.race.data
-        appearance.height = appearance.height if form.height.data == "" else form.height.data
-        appearance.weight = appearance.weight if form.weight.data == "" else form.weight.data
-        appearance.eye_color = appearance.eye_color if form.eye_color.data == "" else form.eye_color.data
-        appearance.hair_color = appearance.hair_color if form.hair_color.data == "" else form.hair_color.data
+            superheroinfo = SuperheroInfo.query.get_or_404(superheroinfo_id)
+            appearance = db.session.query(Appearance).filter_by(superheroinfo_id=superheroinfo.id).one_or_none()
 
-        db.session.commit()
+            appearance.gender = appearance.gender if form.gender.data == "" else form.gender.data
+            appearance.race = appearance.race if form.race.data == "" else form.race.data
+            appearance.height = appearance.height if form.height.data == "" else form.height.data
+            appearance.weight = appearance.weight if form.weight.data == "" else form.weight.data
+            appearance.eye_color = appearance.eye_color if form.eye_color.data == "" else form.eye_color.data
+            appearance.hair_color = appearance.hair_color if form.hair_color.data == "" else form.hair_color.data
 
-        return redirect(f'/mylist/view/{superheroinfo.id}')
+            db.session.commit()
+
+            return redirect(f'/mylist/view/{superheroinfo.id}')
+    else:
+        flash("No superhero found in list!", "danger")
+        return redirect('/mylist/view')
 
     return render_template('/mylist/add_appearance.html', form=form)
 
@@ -276,19 +327,26 @@ def add_work_to_superhero(superheroinfo_id):
 
     form = WorkForm()
 
-    if form.validate_on_submit():
+    get_superhero = check_mylist(superheroinfo_id)
 
-        superheroinfo = SuperheroInfo.query.get_or_404(superheroinfo_id)
+    if get_superhero:
 
-        work = Work(
-            occupation=form.occupation.data,
-            base_of_operation=form.base_of_operation.data
-        )
+        if form.validate_on_submit():
 
-        superheroinfo.work.append(work)
-        db.session.commit()
+            superheroinfo = SuperheroInfo.query.get_or_404(superheroinfo_id)
 
-        return redirect(f'/mylist/view/{superheroinfo.id}')
+            work = Work(
+                occupation=form.occupation.data,
+                base_of_operation=form.base_of_operation.data
+            )
+
+            superheroinfo.work.append(work)
+            db.session.commit()
+
+            return redirect(f'/mylist/view/{superheroinfo.id}')
+    else:
+        flash("No superhero found in list!", "danger")
+        return redirect('/mylist/view')
 
     return render_template('/mylist/add_work.html', form=form)
 
@@ -300,18 +358,24 @@ def edit_work_to_superhero(superheroinfo_id):
 
     form = WorkForm()
 
-    if form.validate_on_submit():
+    get_superhero = check_mylist(superheroinfo_id)
 
-        superheroinfo = SuperheroInfo.query.get_or_404(superheroinfo_id)
+    if get_superhero:
 
-        work = db.session.query(Work).filter_by(superheroinfo_id=superheroinfo.id).one_or_none()
+        if form.validate_on_submit():
 
-        work.occupation = work.occupation if form.occupation.data == "" else form.occupation.data
-        work.base_of_operation = work.base_of_operation if form.base_of_operation.data == "" else form.base_of_operation.data
+            superheroinfo = SuperheroInfo.query.get_or_404(superheroinfo_id)
+            work = db.session.query(Work).filter_by(superheroinfo_id=superheroinfo.id).one_or_none()
 
-        db.session.commit()
+            work.occupation = work.occupation if form.occupation.data == "" else form.occupation.data
+            work.base_of_operation = work.base_of_operation if form.base_of_operation.data == "" else form.base_of_operation.data
 
-        return redirect(f'/mylist/view/{superheroinfo.id}')
+            db.session.commit()
+
+            return redirect(f'/mylist/view/{superheroinfo.id}')
+    else:
+        flash("No superhero found in list!", "danger")
+        return redirect('/mylist/view')
 
     return render_template('/mylist/add_work.html', form=form)
 
@@ -323,19 +387,26 @@ def add_connections_to_superhero(superheroinfo_id):
 
     form = ConnectionsForm()
 
-    if form.validate_on_submit():
+    get_superhero = check_mylist(superheroinfo_id)
 
-        superheroinfo = SuperheroInfo.query.get_or_404(superheroinfo_id)
+    if get_superhero:
 
-        connections = Connections(
-            group_affiliation=form.group_affiliation.data,
-            relatives=form.relatives.data
-        )
+        if form.validate_on_submit():
 
-        superheroinfo.connections.append(connections)
-        db.session.commit()
+            superheroinfo = SuperheroInfo.query.get_or_404(superheroinfo_id)
 
-        return redirect(f'/mylist/view/{superheroinfo.id}')
+            connections = Connections(
+                group_affiliation=form.group_affiliation.data,
+                relatives=form.relatives.data
+            )
+
+            superheroinfo.connections.append(connections)
+            db.session.commit()
+
+            return redirect(f'/mylist/view/{superheroinfo.id}')
+    else:
+        flash("No superhero found in list!", "danger")
+        return redirect('/mylist/view')
 
     return render_template('/mylist/add_connections.html', form=form)
 
@@ -347,19 +418,25 @@ def edit_connections_to_superhero(superheroinfo_id):
 
     form = ConnectionsForm()
 
-    if form.validate_on_submit():
+    get_superhero = check_mylist(superheroinfo_id)
 
-        superheroinfo = SuperheroInfo.query.get_or_404(superheroinfo_id)
+    if get_superhero:
+        
+        if form.validate_on_submit():
 
-        connections = db.session.query(Connections).filter_by(superheroinfo_id=superheroinfo.id).one_or_none()
+            superheroinfo = SuperheroInfo.query.get_or_404(superheroinfo_id)
+            connections = db.session.query(Connections).filter_by(superheroinfo_id=superheroinfo.id).one_or_none()
 
-        connections.group_affiliation = connections.group_affiliation if form.group_affiliation.data == "" else form.group_affiliation.data
-        connections.relatives = connections.relatives if form.relatives.data == "" else form.relatives.data
+            connections.group_affiliation = connections.group_affiliation if form.group_affiliation.data == "" else form.group_affiliation.data
+            connections.relatives = connections.relatives if form.relatives.data == "" else form.relatives.data
 
-        db.session.commit()
+            db.session.commit()
 
-        return redirect(f'/mylist/view/{superheroinfo.id}')
-
+            return redirect(f'/mylist/view/{superheroinfo.id}')
+    else:
+        flash("No superhero found in list!", "danger")
+        return redirect('/mylist/view')
+        
     return render_template('/mylist/add_connections.html', form=form)
 
 @mylist.route("/mylist/delete/<int:superheroinfo_id>", methods=["POST"])

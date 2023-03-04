@@ -66,7 +66,11 @@ def search_superhero_from_otherUsers():
                 if hero:
                     results.append(hero)
 
-            return render_template('/users/search.html', form=form, results=results)
+            if results: 
+                return render_template('/users/search.html', form=form, results=results)
+            else:
+                flash("No superhero found with that name", 'danger')
+                return redirect('/users/search')
 
         except IntegrityError:
             flash("No superhero found with that name", 'danger')

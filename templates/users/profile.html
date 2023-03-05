@@ -2,10 +2,10 @@
 {% block content %}
 <div class="row justify-content-center">
     <div class="col-md-6">
-        <ul class="list-group no-hover" id="messages">
+        <ul class="list-group no-hover" id="superhero-card">
             <li class="list-group-item">
                 <img src="{{ user.image_url }}" alt="" class="timeline-image">
-                <div class="message-area">
+                <div class="hero-card">
                     <div class="message-heading">
                         <h1>Username: {{ user.username }}</h1>
                         <form method="POST" action="/user/edit/{{ user.id }}">

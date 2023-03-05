@@ -5,6 +5,9 @@
 <form method="GET" action="/mylist/create">
     <button class="btn btn-outline-primary">Create New Superhero</button>
 </form>
+<form method="GET" action="/favorites/view">
+    <button class="btn btn-outline-dark">View Favorites</button>
+</form>
 <div class="row justify-content-center">
     <div class="col-md-6">
         <form method="POST" action="/mylist/view">
@@ -18,7 +21,7 @@
                 {% endfor %}
                 {% endif %}
                 {{ form.name(placeholder="Enter a name of a superhero", class="form-control") }}
-                {{ form.order(class="form-control") }}
+                {{ form.order (class="order-by") }}
                 <button class="btn btn-outline-success">Search!</button>
             </div>
         </form>
@@ -27,12 +30,12 @@
 {% if superhero_list %}
 <div class="row justify-content-center">
     <div class="col-md-6">
-        <ul class="list-group no-hover" id="messages">
+        <ul class="list-group no-hover" id="superhero-card">
             {% for superhero in superhero_list %}
             <li class="list-group-item">
-                <div class="message-area">
+                <div class="hero-card">
                     <h1>Name: {{ superhero.name }}</h1>
-                    <img src="{{ superhero.image_url }}" alt="image of superhero" width="400px" height="400px">
+                    <img src="{{ superhero.image_url }}" alt="image of superhero" class="superhero-img">
                 </div>
                 <form method="POST" action="/mylist/delete/{{ superhero.id }}">
                     <button class="btn btn-outline-success">Delete</button>

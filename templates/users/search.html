@@ -22,10 +22,10 @@
 {% if results %}
 <div class="row justify-content-center">
     <div class="col-md-6">
-        <ul class="list-group no-hover" id="messages">
+        <ul class="list-group no-hover" id="superhero-card">
             {% for result in results %}
             <li class="list-group-item">
-                <div class="message-area">
+                <div class="hero-card">
                     <h1>Name: {{ result.name }}</h1>
                     <img src="{{ result.image_url }}" alt="image of superhero" width="400px" height="400px">
                 </div>

@@ -2,10 +2,10 @@
 {% block content %}
 <h1 class="title">Search For Superhero</h1>
 <div class="row justify-content-center">
-    <div class="col-md-6">
+    <div class="col-md-5">
         <form method="POST">
-            {{ form.csrf_token }}
             <div>
+                {{ form.csrf_token }}
                 {% if form.name.errors %}
                 {% for error in form.name.errors %}
                 <span class="text-danger">
@@ -14,18 +14,18 @@
                 {% endfor %}
                 {% endif %}
                 {{ form.name(placeholder="Enter a name of a superhero", class="form-control") }}
+                <button class="btn btn-outline-success">Search!</button>
             </div>
-            <button class="btn btn-outline-success">Search!</button>
         </form>
     </div>
 </div>
 {% if data %}
 <div class="row justify-content-center">
     <div class="col-md-6">
-        <ul class="list-group no-hover" id="messages">
+        <ul class="list-group no-hover" id="superhero-card">
             {% for result in data.results %}
             <li class="list-group-item">
-                <div class="message-area">
+                <div class="hero-card">
                     <h1>Name: {{ result.name }}</h1>
                     <p>Full name: {{ result.biography['full-name'] }}</p>
                     <p>Place of birth: {{ result.biography['place-of-birth'] }}</p>

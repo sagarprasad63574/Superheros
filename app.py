@@ -21,7 +21,7 @@ app.register_blueprint(api, url_prefix="")
 app.register_blueprint(favorites, url_prefix="")
 app.register_blueprint(mylist, url_prefix="")
 
-app.config['SQLALCHEMY_DATABASE_URI'] = (os.environ.get('DATABASE_URL', 'postgresql:///superhero-app'))
+app.config['SQLALCHEMY_DATABASE_URI'] = 'postgresql:///superhero-app'
 app.config['SQLALCHEMY_TRACK_MODIFICATIONS'] = False
 app.config['SQLALCHEMY_ECHO'] = False
 app.config['DEBUG_TB_INTERCEPT_REDIRECTS'] = False

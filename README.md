@@ -50,5 +50,99 @@ If the user is logged in or created an account, direct the user to the search pa
 * In my superheros list page, the user is able to click on the edit button and delete button to edit and delete a superhero in their list. 
 * Lastly if the user clicks on the superheros link on the left side of the nav bar, the user will be redirected to a page to search for a superheros created by other users and the user is able to view details about that superhero and add that superhero to their favorites list. 
 
+## 3. Schema 
 
+### Models
+#### User
+
+   | Property      | Type     | Description |
+   | ------------- | -------- | ------------|
+   | id | int | Unique id |
+   | first_name | String| Not null |
+   | last_name | String | Not null |
+   | username | String | Not null and unique |
+   | password | String | Not null |
+   | image_url | String | Not null |
+   
+#### Superheros
+
+   | Property      | Type     | Description |
+   | ------------- | -------- | ------------|
+   | id | Integer | Unique id |
+   | user_id | Integer | Reference to User model |
+   | superheroinfo_id | Integer | Reference to Superheroinfo model  |
+   
+#### MySuperheros
+
+   | Property      | Type     | Description |
+   | ------------- | -------- | ------------|
+   | id | Integer | Unique id |
+   | user_id | Integer | Reference to User model |
+   | superheroinfo_id | Integer | Reference to Superheroinfo model |
+   
+#### SuperheroInfo
+
+   | Property      | Type     | Description |
+   | ------------- | -------- | ------------|
+   | id | Integer | Unique id |
+   | superhero_id | String | Unique id |
+   | name | String | Not null |
+   | image_url | String | Nullable |
+
+#### Powerstats
+
+   | Property      | Type     | Description |
+   | ------------- | -------- | ------------|
+   | id | Integer | Unique id |
+   | superhero_id | Integer | Reference to Superheroinfo model |
+   | intelligence | String | Not null |
+   | strength | String | Not null |
+   | speed | String | Not null |
+   | durability | String | Not null |
+   | power | String | Not null |
+   | combat | String | Not null |
+
+#### Biography
+
+   | Property      | Type     | Description |
+   | ------------- | -------- | ------------|
+   | id | Integer | Unique id |
+   | superhero_id | Integer | Reference to Superheroinfo model |
+   | full_name | String | Nullable |
+   | place_of_birth | String | Nullable |
+   | first_appearance | String | Nullable |
+   | alter_egos | String | Nullable |
+   | publisher | String | Nullable |
+
+#### Appearance
+
+   | Property      | Type     | Description |
+   | ------------- | -------- | ------------|
+   | id | Integer | Unique id |
+   | superhero_id | Integer | Reference to Superheroinfo model |
+   | gender | String | Nullable |
+   | race | String | Nullable |
+   | height | String | Nullable |
+   | weight | String | Nullable |
+   | eye_color | String | Nullable |
+   | hair_color | String | Nullable |
+
+#### Work
+
+   | Property      | Type     | Description |
+   | ------------- | -------- | ------------|
+   | id | Integer | Unique id |
+   | superhero_id | Integer | Reference to Superheroinfo model |
+   | occupation | String | Nullable |
+   | base_of_operation | String | Nullable |
+
+#### Connections
+
+   | Property      | Type     | Description |
+   | ------------- | -------- | ------------|
+   | id | Integer | Unique id |
+   | superhero_id | Integer | Reference to Superheroinfo model |
+   | group_affiliation | String | Nullable |
+   | relatives | String | Nullable |
+   
 ## API: https://superheroapi.com/?ref=apilist.fun

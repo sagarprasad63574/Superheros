@@ -36,7 +36,7 @@ about newly created superheros. Users are able to add new superheros created by 
   * Add superhero to list
   
 ### Wireframe
-https://github.com/sagarprasad63574/Superheros/blob/master/static/images/My%20superhero%20list.png
+### https://github.com/sagarprasad63574/Superheros/blob/master/static/images/My%20superhero%20list.png
 
 ## 2. User Flow
 * Using sessions: if the user is not logged in, redirect to the login page or create an account page. 

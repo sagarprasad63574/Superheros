@@ -52,8 +52,13 @@ If the user is logged in or created an account, direct the user to the search pa
 
 ### Features
 * Search
-  * asd
-  * 
+  * API/Search route is able to search for a superhero name listed in the API
+  * favorites/view route is able to search for a superhero name in the user's favorite list
+  * mylist/view route is able to search for a superhero name in the user's my superheros list
+* Order By
+  * favorites/view route is able to search for name and sort by asc/dec by name of superhero 
+  * mylist/view route is able to search for name and sort by asc/dec by name of superhero 
+  
 ## 3. Schema 
 
 ### Models
@@ -149,4 +154,13 @@ If the user is logged in or created an account, direct the user to the search pa
    | group_affiliation | String | Nullable |
    | relatives | String | Nullable |
    
-## API: https://superheroapi.com/?ref=apilist.fun
+## 4. API
+### https://superheroapi.com/?ref=apilist.fun
+
+## 5. Technology Stack
+* Python, requests, json, blueprints
+* Flask framework
+* SQL Alchemy
+* Git
+* Heroku
+

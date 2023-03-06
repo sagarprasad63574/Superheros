@@ -36,6 +36,19 @@ about newly created superheros. Users are able to add new superheros created by 
   * Add superhero to list
   
 ### Wireframe
-<img style="border: 1px solid rgba(0, 0, 0, 0.1);" width="1000" height="1000" src="https://github.com/sagarprasad63574/Superheros/blob/master/static/images/My%20superhero%20list.png"/>
+https://github.com/sagarprasad63574/Superheros/blob/master/static/images/My%20superhero%20list.png
+
+### 2. User Flow
+* Using sessions: if the user is not logged in, redirect to the login page or create an account page. 
+If the user is logged in or created an account, direct the user to the search page for searching for a superhero by their name.
+* After searching, the user is able to view more information about a superhero by clicking the view button and add a superhero to their favorites list by clicking on the add button. 
+* Then the user is redirected to favorites list and can see all of their superheroes. The list will contain superheroe's name, image, view button, and delete button. 
+* If the user clicks on the view button, the user will be directed to a page to view more information about the superhero that can be the superheroes powerstats, biography, appearance, work, and connections
+* If the user clicked on the edit button, the user will be directed to an edit page where the user will be able to view and edit information about a superheros powerstats, biography, appearance, work, and connections. Then the user is redirected to their favorite’s list. 
+* In addition, on the favorites page, there will be another button to add a new superhero. When the user has clicked on the create new superhero button, the user will be directed to a page where the user will be able to add a new superhero to their my superheros list. Then the user is directed to their my superheros list.
+* The user is able to view their my superheros list by clicking on the my superheroes button on the nav bar.
+* In my superheros list page, the user is able to click on the edit button and delete button to edit and delete a superhero in their list. 
+* Lastly if the user clicks on the superheros link on the left side of the nav bar, the user will be redirected to a page to search for a superheros created by other users and the user is able to view details about that superhero and add that superhero to their favorites list. 
+
 
 ## API: https://superheroapi.com/?ref=apilist.fun

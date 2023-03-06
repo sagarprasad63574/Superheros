@@ -38,7 +38,7 @@ about newly created superheros. Users are able to add new superheros created by 
 ### Wireframe
 https://github.com/sagarprasad63574/Superheros/blob/master/static/images/My%20superhero%20list.png
 
-### 2. User Flow
+## 2. User Flow
 * Using sessions: if the user is not logged in, redirect to the login page or create an account page. 
 If the user is logged in or created an account, direct the user to the search page for searching for a superhero by their name.
 * After searching, the user is able to view more information about a superhero by clicking the view button and add a superhero to their favorites list by clicking on the add button. 
@@ -50,6 +50,9 @@ If the user is logged in or created an account, direct the user to the search pa
 * In my superheros list page, the user is able to click on the edit button and delete button to edit and delete a superhero in their list. 
 * Lastly if the user clicks on the superheros link on the left side of the nav bar, the user will be redirected to a page to search for a superheros created by other users and the user is able to view details about that superhero and add that superhero to their favorites list. 
 
+### Features
+* Search
+ * ads
 ## 3. Schema 
 
 ### Models

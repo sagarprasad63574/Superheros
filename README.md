@@ -52,7 +52,8 @@ If the user is logged in or created an account, direct the user to the search pa
 
 ### Features
 * Search
- * ads
+  * asd
+  * 
 ## 3. Schema 
 
 ### Models

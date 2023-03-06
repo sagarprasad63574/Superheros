@@ -1,11 +1,11 @@
-import os
-import requests, json
-from flask import Flask, redirect, render_template, Blueprint, request, flash, session, g
-from flask_debugtoolbar import DebugToolbarExtension
+"""
+Routes for favorites list. A user is able to view all superheros added to their favorties list.
+User is able to view more details about a superhero and the user is able to delete a superhero from their list.
+"""
+from flask import Flask, redirect, render_template, Blueprint, flash, session, g
 from sqlalchemy import desc
-from sqlalchemy.exc import IntegrityError, InvalidRequestError
-from models import db, connect_db, User, MySuperheros, Superheros, SuperheroInfo, Powerstats, Biography, Appearance, Work, Connections
-from forms import SignUpForm, LoginForm, UserEditForm, SearchForm, SearchOrderForm, ImageForm, SuperheroForm, PowerstatsForm, BiographyForm, AppearanceForm, WorkForm, ConnectionsForm
+from models import db, Superheros, SuperheroInfo, Powerstats, Biography, Appearance, Work, Connections
+from forms import SearchOrderForm
 
 favorites = Blueprint("favorites", __name__, static_folder="static", template_folder="templates")
 

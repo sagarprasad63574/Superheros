@@ -1,11 +1,15 @@
+"""
+Routes for API search. The user is able to enter a name of a superhero and 
+the returned response is a list of the superheros gathered from the API. 
+The user is able to  view more details about a superhero and 
+a user is able to add a superhero to their favorties list. 
+"""
 import os
 import requests, json
 from flask import Flask, redirect, render_template, Blueprint, request, flash, session, g
-from flask_debugtoolbar import DebugToolbarExtension
-from sqlalchemy import desc
 from sqlalchemy.exc import IntegrityError, InvalidRequestError
-from models import db, connect_db, User, MySuperheros, Superheros, SuperheroInfo, Powerstats, Biography, Appearance, Work, Connections
-from forms import SignUpForm, LoginForm, UserEditForm, SearchForm, SearchOrderForm, ImageForm, SuperheroForm, PowerstatsForm, BiographyForm, AppearanceForm, WorkForm, ConnectionsForm
+from models import db, Superheros, SuperheroInfo, Powerstats, Biography, Appearance, Work, Connections
+from forms import SearchForm
 API_KEY = "https://www.superheroapi.com/api.php/1406925980051610/"
 
 api = Blueprint("api", __name__, static_folder="static", template_folder="templates")

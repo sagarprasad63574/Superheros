@@ -124,15 +124,6 @@ nav+.container {
     margin-top: 2px;
 }
 
-.hero-card,
-.timeline-image {
-    display: block;
-}
-
-.hero-card {
-    margin-left: 10px;
-}
-
 .row.full-width {
     background-color: #fff;
     margin-top: -80px;
@@ -144,22 +135,17 @@ nav+.container {
     align-items: center;
 }
 
+.hero-card,
+.timeline-image {
+    display: block;
+}
+
+.hero-card {
+    margin-left: 10px;
+}
+
 #superhero-card {
     position: relative;
-}
-
-#superhero-card .message-link {
-    position: absolute;
-    top: 0;
-    bottom: 0;
-    left: 0;
-    right: 0;
-    z-index: 1;
-}
-
-#superhero-card .list-group-item a:not(.message-link) {
-    position: relative;
-    z-index: 2;
 }
 
 #superhero-card .list-group-item {
@@ -171,6 +157,33 @@ nav+.container {
 
 #superhero-card:not(.no-hover) .list-group-item:hover {
     background-color: #e6ecf0;
+}
+
+#superhero-card.no-hover .hero-card {
+    width: 100%;
+}
+
+#superhero-card.no-hover .superhero-heading {
+    display: flex;
+    justify-content: space-between;
+    height: 47px;
+    margin-top: 3px;
+}
+
+#superhero-card.no-hover .superhero-heading .btn {
+    min-width: 105px;
+}
+
+.home-title {
+    font-size: 70px;
+    color: darkblue;
+    text-shadow: white 1px 0 10px;
+}
+
+.home-title-2 {
+    font-size: 40px;
+    color: darkblue;
+    text-shadow: white 1px 0 10px;
 }
 
 .home-hero {
@@ -187,7 +200,7 @@ nav+.container {
     background-image: url("/static/images/home-page.jpg");
     background-size: cover;
     background-position: center center;
-    color: darkred;
+    color: black;
     text-align: center;
     padding: 1rem;
 }
@@ -206,28 +219,13 @@ nav+.container {
     left: 0;
     right: 0;
     bottom: 0;
-    background: rgba(255, 255, 255, 0.2);
+    background-color: rgba(255, 255, 255, 0.175);
 }
 
 #user_form input.form-control {
     font-size: 20px;
     font-weight: bold;
     padding: 10px;
-}
-
-#superhero-card.no-hover .hero-card {
-    width: 100%;
-}
-
-#superhero-card.no-hover .message-heading {
-    display: flex;
-    justify-content: space-between;
-    height: 47px;
-    margin-top: 3px;
-}
-
-#superhero-card.no-hover .message-heading .btn {
-    min-width: 105px;
 }
 
 .message-404 {

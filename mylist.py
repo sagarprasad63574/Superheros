@@ -1,11 +1,13 @@
-import os
-import requests, json
-from flask import Flask, redirect, render_template, Blueprint, request, flash, session, g
-from flask_debugtoolbar import DebugToolbarExtension
+"""
+Routes for mylist. The user is able to create a new superhero and add it to their my superheros list.
+The user is able to view all the superheros created by them. The user is able to add/edit powerstats for a superhero. 
+The user is able to add/edit biography for a superhero. The user is able to add/edit appearance for a superhero. 
+The user is able to add/edit work for a superhero. The user is able to add/edit connections for a superhero. 
+"""
+from flask import Flask, redirect, render_template, Blueprint, flash, session, g
 from sqlalchemy import desc
-from sqlalchemy.exc import IntegrityError, InvalidRequestError
-from models import db, connect_db, User, MySuperheros, Superheros, SuperheroInfo, Powerstats, Biography, Appearance, Work, Connections
-from forms import SignUpForm, LoginForm, UserEditForm, SearchForm, SearchOrderForm, ImageForm, SuperheroForm, PowerstatsForm, BiographyForm, AppearanceForm, WorkForm, ConnectionsForm
+from models import db, MySuperheros, SuperheroInfo, Powerstats, Biography, Appearance, Work, Connections
+from forms import SearchOrderForm, ImageForm, SuperheroForm, PowerstatsForm, BiographyForm, AppearanceForm, WorkForm, ConnectionsForm
 
 mylist = Blueprint("mylist", __name__, static_folder="static", template_folder="templates")
 
@@ -24,7 +26,12 @@ def create_new_superhero():
 
     if form.validate_on_submit():
 
-        superheroinfo = SuperheroInfo(name=form.name.data, image_url=form.image_url.data)
+        if form.image_url.data == "":
+            image_url = None
+        else:
+            image_url = form.image_url.data
+
+        superheroinfo = SuperheroInfo(name=form.name.data, image_url=image_url)
 
         g.user.mysuperheros.append(superheroinfo)
         db.session.commit()

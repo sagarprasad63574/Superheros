@@ -1,27 +1,34 @@
-import os
-import requests, json
-from flask import Flask, redirect, render_template, Blueprint, request, flash, session, g
-from flask_debugtoolbar import DebugToolbarExtension
-from sqlalchemy import desc
+"""
+Routes for user. The user is able to view their account and edit their account. 
+The user is able to search for superheros created by other users and the user is able
+to iew more details about the superhero and add the superhero to their favorites list. 
+"""
+from flask import Flask, redirect, render_template, Blueprint, flash, session, g
 from sqlalchemy.exc import IntegrityError, InvalidRequestError
-from models import db, connect_db, User, MySuperheros, Superheros, SuperheroInfo, Powerstats, Biography, Appearance, Work, Connections
-from forms import SignUpForm, LoginForm, UserEditForm, SearchForm, SearchOrderForm, ImageForm, SuperheroForm, PowerstatsForm, BiographyForm, AppearanceForm, WorkForm, ConnectionsForm
+from models import db, User, MySuperheros, Superheros, SuperheroInfo, Powerstats, Biography, Appearance, Work, Connections
+from forms import UserEditForm, SearchForm
 
 users = Blueprint("users", __name__, static_folder="static", template_folder="templates")
 
 @users.route('/user/<int:user_id>')
 def users_show(user_id):
-    """Show user profile."""
+    if not g.user:
+        flash("Access unauthorized.", "danger")
+        return redirect("/")
 
-    user = User.query.get_or_404(user_id)
+    if g.user.id != user_id:
+        flash("Access unauthorized.", "danger")
+        return redirect("/")
 
     return render_template('users/profile.html', user=user)
 
 @users.route('/user/edit/<int:user_id>', methods=["GET", "POST"])
 def users_edit(user_id):
-    """Edit user profile."""
-
     if not g.user:
+        flash("Access unauthorized.", "danger")
+        return redirect("/")
+
+    if g.user.id != user_id:
         flash("Access unauthorized.", "danger")
         return redirect("/")
 
@@ -32,7 +39,7 @@ def users_edit(user_id):
         user = User.authenticate(g.user.username, form.password.data)
 
         if not user: 
-            flash("Invalid password.", 'danger')
+            flash("Invalid username/password.", 'danger')
             return redirect("/")
 
         g.user.username = form.username.data

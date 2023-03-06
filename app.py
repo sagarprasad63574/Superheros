@@ -1,12 +1,13 @@
+"""
+Routes for User. The user is able to create a new account or login in to an existing acccount.
+Using sessions, the website is able to keep a user logged in and the user is able to logout.
+"""
 import os
-import requests, json
-import users
-from flask import Flask, redirect, render_template, request, flash, session, g
+from flask import Flask, redirect, render_template, flash, session, g
 from flask_debugtoolbar import DebugToolbarExtension
-from sqlalchemy import desc
-from sqlalchemy.exc import IntegrityError, InvalidRequestError
-from models import db, connect_db, User, MySuperheros, Superheros, SuperheroInfo, Powerstats, Biography, Appearance, Work, Connections
-from forms import SignUpForm, LoginForm, UserEditForm, SearchForm, SearchOrderForm, ImageForm, SuperheroForm, PowerstatsForm, BiographyForm, AppearanceForm, WorkForm, ConnectionsForm
+from sqlalchemy.exc import IntegrityError
+from models import db, connect_db, User
+from forms import SignUpForm, LoginForm
 from users import users
 from api import api
 from favorites import favorites
@@ -40,33 +41,20 @@ def root():
 
 @app.before_request
 def add_user_to_g():
-    """If we're logged in, add curr user to Flask global."""
-
     if CURR_USER_KEY in session:
         g.user = User.query.get(session[CURR_USER_KEY])
     else:
         g.user = None
 
 def do_login(user):
-    """Log in user."""
-
     session[CURR_USER_KEY] = user.id
 
 def do_logout():
-    """Logout user."""
-
     if CURR_USER_KEY in session:
         del session[CURR_USER_KEY]
 
 @app.route('/signup', methods=["GET", "POST"])
 def signup():
-    """Handle user signup.
-    Create new user and add to DB. Redirect to home page.
-    If form not valid, present form.
-    If the there already is a user with that username: flash message
-    and re-present form.
-    """
-
     form = SignUpForm()
 
     if form.validate_on_submit():
@@ -91,8 +79,6 @@ def signup():
 
 @app.route('/login', methods=["GET", "POST"])
 def login():
-    """Handle user login."""
-
     form = LoginForm()
 
     if form.validate_on_submit():
@@ -109,9 +95,7 @@ def login():
     return render_template('users/login.html', form=form)
 
 @app.route('/logout')
-def logout():
-    """Handle logout of user."""
-    
+def logout():    
     do_logout()
     flash("Logged out.", 'success')
     return redirect('/login')

@@ -36,6 +36,6 @@ about newly created superheros. Users are able to add new superheros created by 
   * Add superhero to list
   
 ### Wireframe
-<img style="border: 1px solid rgba(0, 0, 0, 0.1);" width="800" height="450" src="https://github.com/sagarprasad63574/Superheros/blob/master/static/images/My%20superhero%20list.png"/>
+<img style="border: 1px solid rgba(0, 0, 0, 0.1);" width="1000" height="1000" src="https://github.com/sagarprasad63574/Superheros/blob/master/static/images/My%20superhero%20list.png"/>
 
 ## API: https://superheroapi.com/?ref=apilist.fun

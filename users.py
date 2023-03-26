@@ -20,6 +20,7 @@ def users_show(user_id):
         flash("Access unauthorized.", "danger")
         return redirect("/")
 
+    user = User.query.get_or_404(user_id)
     return render_template('users/profile.html', user=user)
 
 @users.route('/user/edit/<int:user_id>', methods=["GET", "POST"])

@@ -5,8 +5,7 @@
 ## Overview
 
 ### Description
-A website to view details about superheros and add superheros to a favorites list. The details can be the biography, powerstats, appearance, work, and connections of a superhero. Users are able to create new superheros and edit information 
-about newly created superheros. Users are able to add new superheros created by other users to their favorites list. 
+A website to view details about superheroes and add superheroes to a favorites list. The details can be the biography, powerstats, appearance, work, and connections of a superhero. Users are able to create new superheroes and edit information about newly created superheroes. Users are able to add new superheroes created by other users to their favorites list.
 
 ### Deployed: https://superheros-app.herokuapp.com/
 

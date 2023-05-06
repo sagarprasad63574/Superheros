@@ -3,7 +3,7 @@
 ## Table of Contents
 1. [Overview](#Overview)
 1. [Navigation](#Navigation)
-1. [User Flow](#User Flow)
+1. [UserFlow](#UserFlow)
 2. [Schema](#Schema)
 
 ## Overview

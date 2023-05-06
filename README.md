@@ -1,6 +1,10 @@
 # Superheros
 
 ## Table of Contents
+1. [Overview](#Overview)
+1. [Navigation](#Navigation)
+1. [Wireframes](#Wireframes)
+2. [Schema](#Schema)
 
 ## Overview
 

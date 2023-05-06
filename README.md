@@ -4,7 +4,10 @@
 1. [Overview](#Overview)
 1. [Navigation](#Navigation)
 1. [User Flow](#User-Flow)
-2. [Schema](#Schema)
+2. [Features](#Features)
+3. [Schema](#Schema)
+4. [API](#API)
+5. [Technology Stack](#Technology-Stack)
 
 ## Overview
 
@@ -62,7 +65,7 @@ If the user is logged in or created an account, direct the user to the search pa
   * favorites/view route is able to search for name and sort by asc/dec by name of superhero 
   * mylist/view route is able to search for name and sort by asc/dec by name of superhero 
   
-## 3. Schema 
+## Schema 
 
 ### Models
 #### User
@@ -157,10 +160,10 @@ If the user is logged in or created an account, direct the user to the search pa
    | group_affiliation | String | Nullable |
    | relatives | String | Nullable |
    
-## 4. API
+## API
 ### https://superheroapi.com/?ref=apilist.fun
 
-## 5. Technology Stack
+## Technology-Stack
 * Python, requests, json, blueprints
 * Flask framework
 * SQL Alchemy

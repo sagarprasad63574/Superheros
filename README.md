@@ -2,8 +2,8 @@
 
 ## Table of Contents
 1. [Overview](#Overview)
-1. [Navigation](#1. Navigation)
-1. [Wireframes](#Wireframes)
+1. [Navigation](#Navigation)
+1. [User Flow](#User Flow)
 2. [Schema](#Schema)
 
 ## Overview
@@ -13,7 +13,7 @@ A website to view details about superheroes and add superheroes to a favorites l
 
 ### Deployed: https://superheros-app.herokuapp.com/
 
-### 1. Navigation
+### Navigation
 
 **Flow Navigation**
 
@@ -41,7 +41,7 @@ A website to view details about superheroes and add superheroes to a favorites l
 ### Wireframe
 ### https://github.com/sagarprasad63574/Superheros/blob/master/static/images/My%20superhero%20list.png
 
-## 2. User Flow
+### User Flow
 * Using sessions: if the user is not logged in, redirect to the login page or create an account page. 
 If the user is logged in or created an account, direct the user to the search page for searching for a superhero by their name.
 * After searching, the user is able to view more information about a superhero by clicking the view button and add a superhero to their favorites list by clicking on the add button. 
